@@ -1,0 +1,152 @@
+#body{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+.container-fluid{
+    padding-left: 0px;
+    padding-right: 0px;
+}
+
+#firstRow{
+    background-color: #EEE;
+    vertical-align: middle;
+    width: 100% !important;
+    margin-left: 0px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#headerTitle{
+    color: #3B5598;
+    border-bottom: 1px solid #CCC;
+}
+
+#searchSpan{
+    padding-top: 10px;
+}
+
+#keywordSpan{
+    padding-right: 0px;
+}
+
+#keyword{
+    width: 100%;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+#submitSpan{
+    padding-left: 0px;
+}
+
+#submitButton{
+    background-color: #3B5998;
+    width: 100%;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+#clearButton{
+    border: 2px solid;
+    border-color: #3B5998;
+    color: #3B5598;
+    border-radius: 0;
+    -webkit-appearance: none;
+}
+
+#secondRow{
+    vertical-align: middle;
+    width: 100% !important;
+    margin-left: 0px;
+    text-align: center;
+    border-bottom: 2px solid #3B5998;
+}
+
+#secondRow a{
+    display: block;
+    background-color: #FFF;
+    color: #000;
+}
+
+#user{
+    background-color: #3B5998;
+    color: #FFF;
+}
+
+.activeBar{
+    background: #3B5998 !important;
+    color: #FFF !important;
+}
+
+#thirdRow{
+    vertical-align: middle;
+    padding-top: 25px;
+    text-align: left;
+    overflow-x: scroll;
+}
+
+#progressRow{
+    vertical-align: middle;
+    padding-top: 150px;
+}
+
+#detailProgressRow{
+    vertical-align: middle;
+    padding-top: 20px;    
+}
+
+#detailsDiv{
+    padding-left: 15px !important;
+    padding-right: 15px !important;
+    padding-top: 25px !important;
+}
+
+#albumPanel, #postPanel{
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+#albumImages{
+    border-radius: 5px 5px 5px 5px !important;
+}
+
+.toggleTable{
+    transition: 1s linear all;
+    width: auto;
+    overflow: hidden;
+}
+
+.toggleTable.ng-hide{
+    width: 0;
+}
+
+@media (min-width: 768px){
+
+    #headerTitle{
+        border-bottom: none !important;
+    }
+
+    #searchSpan{
+        padding-top: 0px !important;
+    }
+
+    #secondRow a{
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+
+    #progressRow{
+        padding-top: 300px;
+    }
+
+    #fillerDiv{
+        width: 0px !important;
+        padding-left: 0px !important;
+        padding-right: 0px !important;
+    }
+
+    #favoriteTable{
+        overflow: none;
+    }
+}

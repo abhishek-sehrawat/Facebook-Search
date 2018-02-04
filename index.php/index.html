@@ -1,0 +1,335 @@
+<!-- HTML FILE -->
+<!DOCTYPE html>
+<html ng-app="fbApp">
+    
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>FB Search</title>
+        
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous" />
+        <link rel="stylesheet" href="hw8_css.css" />
+        
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular.js"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.3/angular-animate.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+        <script type="text/javascript" src="hw8_angular.js"></script>
+    </head>
+
+    <body class="container-fluid" id="body" ng-controller="fbController">
+        
+        <div id="fb-root"></div>
+        <script>
+            window.fbAsyncInit = function() {
+                FB.init({
+                    appId: '',										// APP ID here
+                    status: true,
+                    cookie: true,
+                    xfbml: true
+                });
+            };
+
+            (function() {
+                var e = document.createElement('script'); e.async = true;
+                e.src = document.location.protocol + '//connect.facebook.net/en_US/all.js';
+                document.getElementById('fb-root').appendChild(e);
+            }());
+        </script>
+        <!-- First row starts here -->
+        
+        <div class="row" id="firstRow">
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-12" id="headerTitle">
+                <h4>FB Search</h4>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="searchSpan">
+                <form class="form-inline">
+                    <span class="col-lg-8 col-md-8 col-sm-8 col-xs-7" id="keywordSpan">
+                        <input type="text" placeholder="type something..." class="form-control" ng-model="keyword" id="keyword" required />
+                    </span>
+                    <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2" id="submitSpan">
+                        <button class="btn btn-default" id="submitButton" ng-model="submit" ng-click="submitFunction(type)">
+                            <span class="glyphicon glyphicon-search" style="color:white;"></span>
+                        </button>
+                    </span>
+                    <span class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                        <input type="reset" value="Clear" class="btn btn-default" id="clearButton" ng-click="resetForm(); resetKeyword()">
+                    </span>
+                </form>
+            </div>
+            <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"></div>
+        </div>
+        <!-- First row ends here -->
+
+        <!-- Second row starts here -->
+        <div class="row" id="secondRow">
+            <a href="#/user" class="col-lg-2 col-md-2 col-sm-2 col-xs-12" id="user" ng-click="submitFunction('user')" ng-class="{activeBar : type === 'user'}">
+                <span>
+                    Users
+                </span>
+            </a>
+            <a href="#/page" class="col-lg-2 col-md-2 col-sm-2 col-xs-12" id="page" ng-click="submitFunction('page')" ng-class="{activeBar : type === 'page'}">
+                <span>
+                    Pages
+                </span>
+            </a>
+            <a href="#/event" class="col-lg-2 col-md-2 col-sm-2 col-xs-12" id="event" ng-click="submitFunction('event')" ng-class="{activeBar : type === 'event'}">
+                <span>
+                    Events
+                </span>
+            </a>
+            <a href="#/place" class="col-lg-2 col-md-2 col-sm-2 col-xs-12" id="place" ng-click="submitFunction('place')" ng-class="{activeBar : type === 'place'}">
+                <span>
+                    Places
+                </span>
+            </a>
+            <a href="#/group" class="col-lg-2 col-md-2 col-sm-2 col-xs-12" id="group" ng-click="submitFunction('group')" ng-class="{activeBar : type === 'group'}">
+                <span>
+                    Groups
+                </span>
+            </a>
+            <a href="#/favorite" class="col-lg-2 col-md-2 col-sm-2 col-xs-12" id="favorite" ng-click="renderFavorite(); submitFunction('favorite')" ng-class="{activeBar : type === 'favorite'}">
+                <span>
+                    Favorites
+                </span>
+            </a>
+        </div>
+        <!-- Second row ends here -->
+        
+        <!-- Basic div starts here -->
+        <div class="toggleTable">
+            <!-- empty div -->
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+
+            <!-- progress bar starts -->
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" id="progressRow" ng-hide="progressBar">
+            <div class="progress">
+                <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                    <span class="sr-only">50% Complete</span>
+                </div>
+            </div>
+            </div>
+            <!-- progress bar ends -->
+
+            <!-- data table starts -->
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10 dataTableHide" id="thirdRow">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">#</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1 col-xs-">Profile Photo</th>
+                                <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Name</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Favorites</th>
+                                <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="rd in responseData">
+                                <td>
+                                    {{$index+1}}
+                                </td>
+                                <td>
+                                    <img src={{rd.picture.data.url}} class="img-circle" height=30 width=30/>
+                                </td>
+                                <td>
+                                    {{rd.name}}
+                                </td>
+                                <td ng-if="localStorage.getItem(rd['id']) != null">
+                                    <button class="btn btn-default btn-small" ng-model="removefavoriteButton" ng-click="removeFavorite(rd.id)">
+                                        <span class="glyphicon glyphicon-star" style="color: yellow;"></span>
+                                    </button>
+                                </td>
+                                <td ng-if="localStorage.getItem(rd['id']) == null">
+                                    <button class="btn btn-default btn-small" ng-model="addFavoriteButton" ng-click="addFavorite(rd.id, rd.name, rd.picture.data.url, type)">
+                                        <span class="glyphicon glyphicon-star-empty"></span>
+                                    </button>
+                                </td>
+                                </td>
+                                <td>
+                                    <button class="btn btn-default btn-small" ng-model="detailsButton" ng-click="detailsFunction(rd.id, rd.name, rd.picture.data.url)">
+                                          <span class="glyphicon glyphicon-chevron-right"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+
+                <!-- start of pagination buttons -->
+                <center>
+                    <div>
+                        <button class="btn btn-default" ng-if="prev != undefined" ng-model="prev" ng-click="pagingFunction(prev)" id="paginationButtons">
+                            Previous
+                        </button>
+                        &nbsp;
+                        <button class="btn btn-default" ng-if="next != undefined" ng-model="next" ng-click="pagingFunction(next)" id="paginationButtons">
+                            Next
+                        </button>
+                    </div>
+                </center>
+                <!-- end of pagination buttons -->
+
+            </div>
+            <!-- data table ends -->
+            
+            <!-- empty div -->
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1" style="height: 100% !important"></div>
+        </div>
+        <!-- Basic div ends here -->
+
+
+        <!-- Details Table starts here -->
+        <div id="detailTableHide">
+            <div id="detailsDiv">
+                <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                    <button class="btn btn-default" ng-click="backFunction()">
+                        <span class="glyphicon glyphicon-chevron-left"></span>
+                        Back
+                    </button>
+                </div>
+                <div class="col-lg-9 col-md-9 col-sm-9 col-xs-7">
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4" style="text-align: right;">
+                    <div ng-if="localStorage.getItem(detailId) != null" style="display: inline;">
+                        <button class="btn btn-default btn-small" ng-model="removefavoriteButton" ng-click="removeFavorite(detailId)">
+                            <span class="glyphicon glyphicon-star" style="color: yellow;"></span>
+                        </button>
+                    </div>
+                    <div ng-if="localStorage.getItem(detailId) == null" style="display: inline;">
+                        <button class="btn btn-default btn-small" ng-model="addFavoriteButton" ng-click="addFavorite(detailId, detailName, detailUrl, type)">
+                            <span class="glyphicon glyphicon-star-empty"></span>
+                        </button>
+                    </div>
+                    <button class="btn btn-default" ng-click="share(detailId, detailName, detailUrl)">
+                        <img src="facebook.png" width="20" height="20" />
+                    </button>
+                </div>
+                <div class="row"></div>
+                <br>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="panel panel-default" id="albumPanel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Albums</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <div ng-hide="albumPanels">
+                                <div class="panel panel-default" ng-repeat="album in albums">
+                                    <div class="panel-heading panel-title" onclick="toggleAlbumPhotos(this)">
+                                        <a href="">
+                                            {{album.name}}
+                                        </a>
+                                    </div>
+                                    <div class="panel-body" ng-show="{{$index}} == 0" id="{{$index}}Photo">
+                                        <div ng-repeat="a in album.photos.data">
+                                            <img src="https://graph.facebook.com/v2.8/{{a.id}}/picture?access_token={{access_token}}&type=normal" class="img-rounded col-lg-12 col-md-12 col-sm-12 col-xs-12"/>
+                                        </div><br>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning" role="alert" ng-hide="albumHide">
+                                    No albums to display
+                                </div>
+                            </div>
+                            <div class="progress" ng-hide="albumProgress">
+                                <div class="progress-bar progress-bar-striped active col-lg-9 col-md-9 col-sm-9 col-xs-9" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
+                                    <span class="sr-only">50% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                    <div class="panel panel-default" id="postPanel">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Posts</h3>
+                        </div>
+
+                        <div class="panel-body">
+                            <div ng-hide="postPanels">
+                                <div class="panel panel-default" ng-repeat="post in posts">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1">
+                                                <img src={{detailUrl}} height=40 width=40/>
+                                            </div>
+                                            <div class="col-xs-1" id="fillerDiv"></div>
+                                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-8">
+                                                <b>{{detailName}}</b><br>
+                                                {{post.created_time | date:'yyyy-MM-dd HH:mm:ss'}}
+                                            </div>
+                                        </div>
+                                        <br>
+                                        <span ng-if="post.message != null">
+                                            {{post.message}}
+                                        </span>
+                                        <span ng-if="post.message == null">
+                                            {{post.story}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning" role="alert" ng-hide="postHide">
+                                    No posts to display
+                                </div>
+                            </div>
+                            <div class="progress" ng-hide="postProgress">
+                                <div class="progress-bar progress-bar-striped active col-lg-9 col-md-9 col-sm-9 col-xs-9" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 45%;">
+                                    <span class="sr-only">50% Complete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- favorite Table -->
+        <div id="favoriteTableHide">
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+            <div class="col-lg-10 col-md-10 col-sm-10 col-xs-10" id="thirdRow">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">#</th>
+                            <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Profile Photo</th>
+                            <th class="col-lg-2 col-md-2 col-sm-2 col-xs-2">Name</th>
+                            <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Type</th>
+                            <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Favorites</th>
+                            <th class="col-lg-1 col-md-1 col-sm-1 col-xs-1">Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="fd in favoriteData">
+                            <td>
+                                {{$index+1}}
+                            </td>
+                            <td>
+                                <img src={{fd.url}} class="img-circle" height=30 width=30/>
+                            </td>
+                            <td>
+                                {{fd.name}}
+                            </td>
+                            <td>
+                                {{fd.type}}
+                            </td>
+                            <td>
+                                <button class="btn btn-default btn-small" ng-model="favoriteButton" ng-click="removeFavorite(fd.id); renderFavorite()">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                </button>
+                            </td>
+                            <td>
+                                <button class="btn btn-default btn-small" ng-model="detailsButton" ng-click="detailsFunction(fd.id, fd.name, fd.url)">
+                                    <span class="glyphicon glyphicon-chevron-right"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-lg-1 col-md-1 col-sm-1 col-xs-1"></div>
+        </div>
+
+
+    </body>
+</html>
