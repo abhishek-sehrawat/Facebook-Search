@@ -7,7 +7,7 @@ The assignment was completed as part of the subject Web Technologies (CSCI - 571
 You can see the demo for this assignment at:
 csci571hw8abhisheks-env.us-west-2.elasticbeanstalk.com
 
-If the demo does not works, it may be due two either of the following two, equally likely reason:
+If the demo does not works, it may be due two either of the following two likely reason:
   - The Facebook Graph API access token has expired (does so every months - the more likely explanation)
   - The PHP service has been stopped at the AWS server due to the account running out of free credits!
 
