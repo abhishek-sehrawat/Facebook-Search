@@ -8,7 +8,7 @@ You can see the demo for this assignment at:
 csci571hw8abhisheks-env.us-west-2.elasticbeanstalk.com
 
 If the demo does not works, it may be due to either of the following reasons:
-  - The Facebook Graph API access token has expired (does so every months - the more likely explanation)
+  - The Facebook Graph API access token has expired (does so every month - the more likely explanation)
   - The PHP service has been stopped at the AWS server due to the account running out of free credits!
 
 Have a good coding session! :)
